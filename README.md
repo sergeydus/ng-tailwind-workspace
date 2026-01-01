@@ -1,59 +1,76 @@
-# MyDirectiveWorkspace
+# Angular Directive Workspace
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+An Angular monorepo workspace containing multiple standalone directive and utility libraries. Built with Angular 21+ using `ng-packagr` for npm publishing.
 
-## Development server
+## Projects
 
-To start a local development server, run:
+### [`ng-tailwind-merge`](./projects/ng-tailwind-merge)
+An Angular standalone directive that merges Tailwind CSS classes using `tailwind-merge` and `clsx`.
 
-```bash
-ng serve
-```
+**Features:**
+- `[twMerge]` directive - merges `class` and `ngClass` attributes
+- `[merge]` directive - dynamic class merging via property binding  
+- `cn()` and `mergeTailwindClasses()` utility functions
+- Signal-based inputs
+- Tree-shakeable
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+See [ng-tailwind-merge README](./projects/ng-tailwind-merge/README.md) for detailed usage.
 
-## Code scaffolding
+### Other Libraries
+- `my-directive-lib` - foundational directive library
+- `ng-tailwind-merge1` - additional Tailwind utilities
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Setup
 
-```bash
-ng generate component component-name
-```
+### Prerequisites
+- Node.js 18+
+- npm 9+
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Installation
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Development
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Build All Libraries
 
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Build Specific Library
 
 ```bash
-ng e2e
+ng build ng-tailwind-merge
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Run Tests
 
-## Additional Resources
+```bash
+npm run test
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Development Server
+
+```bash
+npm start
+```
+
+## Publishing to npm
+
+Build the library:
+
+```bash
+ng build ng-tailwind-merge
+```
+
+Publish:
+
+```bash
+cd dist/ng-tailwind-merge
+npm publish
+```
+
+Each library is configured with `ng-packagr` for automated bundling and distribution.
