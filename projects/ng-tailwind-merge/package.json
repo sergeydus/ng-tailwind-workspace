@@ -2,18 +2,10 @@
   "name": "ng-tailwind-merge",
   "version": "0.0.4",
   "peerDependencies": {
-    "@angular/common": ">=17.0.0",
-    "@angular/core": ">=17.0.0",
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
     "tailwind-merge": "^3.4.0",
     "clsx": "^2.1.1"
-  },
-  "peerDependenciesMeta": {
-    "@angular/common": {
-      "optional": false
-    },
-    "@angular/core": {
-      "optional": false
-    }
   },
   "dependencies": {
     "tslib": "^2.3.0"

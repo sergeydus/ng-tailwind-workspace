@@ -55,7 +55,7 @@ export class ExampleComponent {
 }
 ```
 
-### `merge` Directive (Signal-based)
+### `merge` Directive
 
 Property binding for dynamic class merging:
 
@@ -100,131 +100,26 @@ export class ExampleComponent {
 }
 ```
 
-### `twClass` Directive
-
-Single-class binding with automatic merging against static `class`:
-
-```typescript
-import { Component, signal } from '@angular/core';
-import { NgTwClass } from 'ng-tailwind-merge';
-
-@Component({
-  selector: 'app-example',
-  standalone: true,
-  imports: [NgTwClass],
-  template: `
-    <!-- Static + dynamic classes merged -->
-    <div twClass class="p-4 bg-red-500" [twClass]="dynamicClasses()">
-      Merged with static class
-    </div>
-
-    <!-- Single dynamic class -->
-    <button twClass [twClass]="buttonState()">
-      Click me
-    </button>
-  `
-})
-export class ExampleComponent {
-  dynamicClasses = signal('bg-blue-500 text-white');
-  buttonState = signal('bg-green-500 hover:bg-green-600');
-}
-```
-
-### `merge` Directive (Legacy @Input)
-
-For non-signal components using traditional `@Input()`:
-
-```typescript
-import { Component } from '@angular/core';
-import { NgMergeLegacy } from 'ng-tailwind-merge';
-
-@Component({
-  selector: 'app-example',
-  standalone: true,
-  imports: [NgMergeLegacy],
-  template: `
-    <div [merge]="classes">Traditional input binding</div>
-  `
-})
-export class ExampleComponent {
-  classes = 'bg-blue-500 p-4 text-white';
-}
-```
-
-## Utility Functions
-
-### `cn()` - Direct merging in component logic
-
-```typescript
-import { Component } from '@angular/core';
-import { cn } from 'ng-tailwind-merge';
-
-@Component({
-  selector: 'app-button',
-  standalone: true,
-  template: `<button [class]="buttonClass">Click</button>`
-})
-export class ButtonComponent {
-  buttonClass = cn('px-4 py-2 rounded', 'bg-red-500 bg-blue-500'); // bg-blue-500 wins
-}
-```
-
-### `mergeTailwindClasses()` - Composable function
-
-```typescript
-import { Component, computed, signal } from '@angular/core';
-import { mergeTailwindClasses } from 'ng-tailwind-merge';
-
-@Component({
-  selector: 'app-card',
-  standalone: true,
-  template: `<div [class]="cardClasses()">Card</div>`
-})
-export class CardComponent {
-  variant = signal('primary');
-  size = signal('lg');
-
-  cardClasses = computed(() => {
-    const baseClasses = 'rounded-lg shadow-md';
-    const variantClasses = this.variant() === 'primary' ? 'bg-blue-500 text-white' : 'bg-gray-200';
-    const sizeClasses = this.size() === 'lg' ? 'p-8' : 'p-4';
-    
-    return mergeTailwindClasses(baseClasses, variantClasses, sizeClasses);
-  });
-}
-```
-
 ## API
 
-| Directive | Selector | Input | Best For |
-|-----------|----------|-------|----------|
-| `NgTailwindMerge` | `[twMerge]` | `class`, `ngClass` attributes | Merging existing template attributes |
-| `NgMerge` | `[merge]` (signal) | Signal input | Dynamic class merging with signals |
-| `NgMergeLegacy` | `[merge]` (@Input) | Property binding | Legacy components |
-| `NgTwClass` | `[twClass]` | Signal input | Single dynamic class with static base |
+### `NgTailwindMerge`
+- **Selector:** `[twMerge]`
+- **Behavior:** Reads `class` and `ngClass` attributes and merges them via `tailwind-merge`.
 
-| Function | Returns | Best For |
-|----------|---------|----------|
-| `cn()` | `string` | Direct use in component logic |
-| `mergeTailwindClasses()` | `string` | Composable/computed class logic |
+### `NgMerge`
+- **Selector:** `[merge]`
+- **Input:** `merge` - accepts `ClassValue | ClassValue[]` (string, string[], object, or mixed array)
+- **Behavior:** Merges the input value(s) and applies the result to the element's `class` attribute.
 
-## Features
-
-- ✅ Signal-based and legacy `@Input()` support
-- ✅ Standalone directives (no module required)
-- ✅ Resolves Tailwind conflicts (last variant wins)
-- ✅ Tree-shakeable (`sideEffects: false`)
-- ✅ Utility functions for component scripts
-- ✅ Works with strings, arrays, and objects
+Both directives:
+- Are standalone (no module required)
+- Use signal-based inputs
+- Resolve Tailwind conflicts (last variant wins)
+- Are tree-shakeable (`sideEffects: false`)
 
 ## How it works
 
-- Directives read input values reactively via signals or `@Input()`.
-- `clsx` normalizes inputs (strings, arrays, objects).
-- `tailwind-merge` resolves Tailwind conflicts.
-- Final merged string is applied to element's `class` attribute.
-
-## License
-
-MIT
+- Signal-based inputs read the current values reactively.
+- `clsx` normalizes inputs; `tailwind-merge` resolves Tailwind conflicts.
+- The final merged string is applied to the element's `class` attribute via `effect()`.
 
