@@ -2,9 +2,13 @@ import { Directive, ElementRef, inject, effect, input } from '@angular/core';
 import { twMerge } from 'tailwind-merge';
 import clsx, { type ClassValue } from 'clsx';
 
-const cn = (...inputs: ClassValue[]) => {
+export const cn = (...inputs: ClassValue[]) => {
   return twMerge(clsx(inputs));
 };
+
+export function mergeTailwindClasses(...inputs: ClassValue[]): string {
+  return cn(...inputs);
+}
 
 @Directive({
   selector: '[twMerge]',

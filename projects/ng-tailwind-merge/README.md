@@ -4,7 +4,7 @@ An Angular standalone directive that **merges Tailwind CSS classes** from `class
 
 ## Requirements
 
-- Angular `@angular/core` and `@angular/common` **^21.0.0** (standalone + signal inputs)
+- Angular `@angular/core` and `@angular/common` **^17.0.0** (standalone + signal inputs)
 - `tailwind-merge` **^3.4.0**
 - `clsx` **^2.1.1**
 
@@ -102,6 +102,38 @@ export class ExampleComponent {
 
 ## API
 
+### `cn(...inputs: ClassValue[]): string`
+Utility function that combines `clsx` and `tailwind-merge` for merging class values with Tailwind conflict resolution.
+
+```typescript
+import { cn } from 'ng-tailwind-merge';
+
+// String arguments
+const merged = cn('bg-red-500', 'bg-blue-500 p-4'); // Returns: 'bg-blue-500 p-4'
+
+// Array and object arguments
+const conditionalClasses = cn(
+  ['p-4', 'text-white'],
+  { 'bg-blue-500': true, 'bg-red-500': false, 'font-bold': true }
+); // Returns: 'p-4 text-white bg-blue-500 font-bold'
+
+// Mixed array with strings and objects
+const mixed = cn(
+  'bg-red-500 p-4',
+  ['text-white', 'm-2'],
+  { 'bg-blue-500': true }
+); // Returns: 'p-4 text-white m-2 bg-blue-500'
+```
+
+### `mergeTailwindClasses(...inputs: ClassValue[]): string`
+Alias for `cn()`. Explicitly named utility for merging Tailwind classes.
+
+```typescript
+import { mergeTailwindClasses } from 'ng-tailwind-merge';
+
+const merged = mergeTailwindClasses('p-4 p-8', 'm-2'); // Returns: 'p-8 m-2'
+```
+
 ### `NgTailwindMerge`
 - **Selector:** `[twMerge]`
 - **Behavior:** Reads `class` and `ngClass` attributes and merges them via `tailwind-merge`.
@@ -111,6 +143,7 @@ export class ExampleComponent {
 - **Input:** `merge` - accepts `ClassValue | ClassValue[]` (string, string[], object, or mixed array)
 - **Behavior:** Merges the input value(s) and applies the result to the element's `class` attribute.
 
+### Directive Features
 Both directives:
 - Are standalone (no module required)
 - Use signal-based inputs
