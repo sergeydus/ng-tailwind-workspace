@@ -7,6 +7,17 @@
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
+    "paths": {
+      "my-directive-lib": [
+        "./dist/my-directive-lib"
+      ],
+      "ng-tailwind-merge": [
+        "./dist/ng-tailwind-merge"
+      ],
+      "ng-tailwind-merge1": [
+        "./dist/ng-tailwind-merge1"
+      ]
+    },
     "noFallthroughCasesInSwitch": true,
     "skipLibCheck": true,
     "isolatedModules": true,
@@ -21,5 +32,25 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "files": []
+  "files": [],
+  "references": [
+    {
+      "path": "./projects/my-directive-lib/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/my-directive-lib/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ng-tailwind-merge/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ng-tailwind-merge/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/ng-tailwind-merge1/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/ng-tailwind-merge1/tsconfig.spec.json"
+    }
+  ]
 }

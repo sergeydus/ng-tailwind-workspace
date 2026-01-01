@@ -1,0 +1,21 @@
+{
+  "name": "ng-tailwind-merge",
+  "version": "0.0.4",
+  "peerDependencies": {
+    "@angular/common": "^21.0.0",
+    "@angular/core": "^21.0.0",
+    "tailwind-merge": "^3.4.0",
+    "clsx": "^2.1.1"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "keywords": [
+    "angular",
+    "directive",
+    "tailwind",
+    "tw-merge",
+    "class-merge"
+  ],
+  "sideEffects": false
+}

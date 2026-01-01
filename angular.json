@@ -6,5 +6,83 @@
   },
   "newProjectRoot": "projects",
   "projects": {
+    "my-directive-lib": {
+      "projectType": "library",
+      "root": "projects/my-directive-lib",
+      "sourceRoot": "projects/my-directive-lib/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/my-directive-lib/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/my-directive-lib/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/my-directive-lib/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "ng-tailwind-merge": {
+      "projectType": "library",
+      "root": "projects/ng-tailwind-merge",
+      "sourceRoot": "projects/ng-tailwind-merge/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ng-tailwind-merge/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ng-tailwind-merge/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/ng-tailwind-merge/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "ng-tailwind-merge1": {
+      "projectType": "library",
+      "root": "projects/ng-tailwind-merge1",
+      "sourceRoot": "projects/ng-tailwind-merge1/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ng-tailwind-merge1/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ng-tailwind-merge1/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/ng-tailwind-merge1/tsconfig.spec.json"
+          }
+        }
+      }
+    }
   }
 }
