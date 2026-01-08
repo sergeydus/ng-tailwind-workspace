@@ -1,5 +1,5 @@
 {
-  "name": "ng-signals-utils",
+  "name": "@sergeydus/ng-signals-utils",
   "version": "0.0.1",
   "description": "Utility functions for Angular signals",
   "keywords": [
