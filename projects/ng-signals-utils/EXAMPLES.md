@@ -1,6 +1,6 @@
-# ng-signals-utils - Examples
+# @sergeydus/ng-signals-utils - Examples
 
-Comprehensive examples for all utility functions in the ng-signals-utils package.
+Comprehensive examples for all utility functions in the @sergeydus/ng-signals-utils package.
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@ Transform a signal value to another type.
 
 ```typescript
 import { signal } from '@angular/core';
-import { mapSignal } from 'ng-signals-utils';
+import { mapSignal } from '@sergeydus/ng-signals-utils';
 
 // Basic number transformation
 const count = signal(5);
@@ -46,7 +46,7 @@ Filter signal updates based on a predicate.
 
 ```typescript
 import { signal } from '@angular/core';
-import { filterSignal } from 'ng-signals-utils';
+import { filterSignal } from '@sergeydus/ng-signals-utils';
 
 // Only allow positive numbers
 const input = signal(0);
@@ -78,7 +78,7 @@ Debounce signal updates by a specified delay.
 
 ```typescript
 import { signal } from '@angular/core';
-import { debounceSignal } from 'ng-signals-utils';
+import { debounceSignal } from '@sergeydus/ng-signals-utils';
 
 const searchTerm = signal('');
 const debouncedSearch = debounceSignal(searchTerm, 300);
@@ -107,7 +107,7 @@ Combine multiple signals into a single signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { combineSignals } from 'ng-signals-utils';
+import { combineSignals } from '@sergeydus/ng-signals-utils';
 
 const firstName = signal('John');
 const lastName = signal('Doe');
@@ -144,7 +144,7 @@ Emit only distinct values from a signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { distinctSignal } from 'ng-signals-utils';
+import { distinctSignal } from '@sergeydus/ng-signals-utils';
 
 // With primitive values
 const value = signal(1);
@@ -176,7 +176,7 @@ Add items to an array signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalPush } from 'ng-signals-utils';
+import { arraySignalPush } from '@sergeydus/ng-signals-utils';
 
 const todos = signal<string[]>([]);
 
@@ -212,7 +212,7 @@ Remove an item from an array signal by index.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalRemoveAt } from 'ng-signals-utils';
+import { arraySignalRemoveAt } from '@sergeydus/ng-signals-utils';
 
 const items = signal(['a', 'b', 'c', 'd']);
 
@@ -250,7 +250,7 @@ Create a computed signal with filtered array.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalFilter } from 'ng-signals-utils';
+import { arraySignalFilter } from '@sergeydus/ng-signals-utils';
 
 const numbers = signal([1, 2, 3, 4, 5, 6]);
 const evenNumbers = arraySignalFilter(numbers, (n) => n % 2 === 0);
@@ -282,7 +282,7 @@ Create a computed signal with mapped array.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalMap } from 'ng-signals-utils';
+import { arraySignalMap } from '@sergeydus/ng-signals-utils';
 
 const numbers = signal([1, 2, 3, 4]);
 const squared = arraySignalMap(numbers, (n) => n * n);
@@ -313,7 +313,7 @@ Create a computed signal with sorted array.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalSort } from 'ng-signals-utils';
+import { arraySignalSort } from '@sergeydus/ng-signals-utils';
 
 // Sort numbers
 const numbers = signal([5, 2, 8, 1, 9]);
@@ -346,7 +346,7 @@ Find an item in an array signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalFind } from 'ng-signals-utils';
+import { arraySignalFind } from '@sergeydus/ng-signals-utils';
 
 const users = signal([
   { id: 1, name: 'John' },
@@ -387,7 +387,7 @@ Get the length of an array signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalLength } from 'ng-signals-utils';
+import { arraySignalLength } from '@sergeydus/ng-signals-utils';
 
 const items = signal([1, 2, 3, 4, 5]);
 const count = arraySignalLength(items);
@@ -419,7 +419,7 @@ Check if an array signal is empty.
 
 ```typescript
 import { signal } from '@angular/core';
-import { arraySignalIsEmpty } from 'ng-signals-utils';
+import { arraySignalIsEmpty } from '@sergeydus/ng-signals-utils';
 
 const todos = signal<string[]>([]);
 const isEmpty = arraySignalIsEmpty(todos);
@@ -458,7 +458,7 @@ Update an object signal with partial values.
 
 ```typescript
 import { signal } from '@angular/core';
-import { patchSignal } from 'ng-signals-utils';
+import { patchSignal } from '@sergeydus/ng-signals-utils';
 
 interface User {
   id: number;
@@ -514,7 +514,7 @@ Pick specific keys from an object signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { pickSignal } from 'ng-signals-utils';
+import { pickSignal } from '@sergeydus/ng-signals-utils';
 
 interface User {
   id: number;
@@ -549,7 +549,7 @@ Omit specific keys from an object signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { omitSignal } from 'ng-signals-utils';
+import { omitSignal } from '@sergeydus/ng-signals-utils';
 
 interface User {
   id: number;
@@ -584,7 +584,7 @@ Extract a single property from an object signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { pluckSignal } from 'ng-signals-utils';
+import { pluckSignal } from '@sergeydus/ng-signals-utils';
 
 interface Product {
   id: number;
@@ -628,7 +628,7 @@ Get the keys of an object signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { objectSignalKeys } from 'ng-signals-utils';
+import { objectSignalKeys } from '@sergeydus/ng-signals-utils';
 
 const settings = signal({
   theme: 'dark',
@@ -661,7 +661,7 @@ Get the values of an object signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { objectSignalValues } from 'ng-signals-utils';
+import { objectSignalValues } from '@sergeydus/ng-signals-utils';
 
 const scores = signal({
   math: 95,
@@ -686,7 +686,7 @@ Get the entries of an object signal.
 
 ```typescript
 import { signal } from '@angular/core';
-import { objectSignalEntries } from 'ng-signals-utils';
+import { objectSignalEntries } from '@sergeydus/ng-signals-utils';
 
 const user = signal({
   name: 'John',
@@ -725,7 +725,7 @@ Create an effect that tracks value changes with previous value.
 
 ```typescript
 import { signal } from '@angular/core';
-import { watchSignal } from 'ng-signals-utils';
+import { watchSignal } from '@sergeydus/ng-signals-utils';
 
 const count = signal(0);
 
@@ -759,7 +759,7 @@ Create an effect that runs once when a condition is met.
 
 ```typescript
 import { signal } from '@angular/core';
-import { watchUntil } from 'ng-signals-utils';
+import { watchUntil } from '@sergeydus/ng-signals-utils';
 
 const loading = signal(true);
 const data = signal<any>(null);
@@ -809,7 +809,7 @@ Create a throttled effect that runs at most once per time interval.
 
 ```typescript
 import { signal } from '@angular/core';
-import { throttleEffect } from 'ng-signals-utils';
+import { throttleEffect } from '@sergeydus/ng-signals-utils';
 
 // Throttle scroll events
 const scrollY = signal(0);
@@ -860,7 +860,7 @@ Create a debounced effect that waits for changes to stop.
 
 ```typescript
 import { signal } from '@angular/core';
-import { debounceEffect } from 'ng-signals-utils';
+import { debounceEffect } from '@sergeydus/ng-signals-utils';
 
 // Debounce search API calls
 const searchQuery = signal('');
@@ -926,7 +926,7 @@ import {
   arraySignalFilter,
   arraySignalLength,
   arraySignalIsEmpty
-} from 'ng-signals-utils';
+} from '@sergeydus/ng-signals-utils';
 
 interface Todo {
   id: number;
@@ -1003,7 +1003,7 @@ export class TodoAppComponent {
 
 ```typescript
 import { Component, signal } from '@angular/core';
-import { patchSignal, pickSignal, pluckSignal } from 'ng-signals-utils';
+import { patchSignal, pickSignal, pluckSignal } from '@sergeydus/ng-signals-utils';
 
 interface UserProfile {
   id: number;
@@ -1090,3 +1090,4 @@ export class UserProfileComponent {
 7. **Type your signals** properly for better TypeScript support
 
 For more information, visit the [GitHub repository](https://github.com/yourusername/ng-signals-utils).
+
