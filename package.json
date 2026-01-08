@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "docs:ng-signals-utils": "compodoc -p projects/ng-signals-utils/tsconfig.lib.json -d docs/ng-signals-utils --name 'ng-signals-utils API Documentation' --theme material",
+    "docs:serve": "compodoc -p projects/ng-signals-utils/tsconfig.lib.json -d docs/ng-signals-utils --name 'ng-signals-utils API Documentation' --theme material -s"
   },
   "prettier": {
     "printWidth": 100,
@@ -38,6 +40,7 @@
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.0",
+    "@compodoc/compodoc": "^1.1.32",
     "jsdom": "^27.1.0",
     "ng-packagr": "^21.0.0",
     "typescript": "~5.9.2",
