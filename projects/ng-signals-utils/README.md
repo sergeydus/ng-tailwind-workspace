@@ -1,13 +1,13 @@
-# ng-signals-utils
+# @sergeydus/ng-signals-utils
 
-[![npm version](https://img.shields.io/npm/v/ng-signals-utils.svg)](https://www.npmjs.com/package/ng-signals-utils)
+[![npm version](https://img.shields.io/npm/v/@sergeydus/ng-signals-utils.svg)](https://www.npmjs.com/package/@sergeydus/ng-signals-utils)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
 [![Angular](https://img.shields.io/badge/Angular-17+-red.svg)](https://angular.io/)
 
 **Powerful utility functions for Angular signals that make reactive programming easier and more intuitive.**
 
-Stop writing repetitive signal manipulation code. `ng-signals-utils` provides a comprehensive set of utilities for transforming, filtering, and managing signals in your Angular applications.
+Stop writing repetitive signal manipulation code. `@sergeydus/ng-signals-utils` provides a comprehensive set of utilities for transforming, filtering, and managing signals in your Angular applications.
 
 ## 🚀 Why ng-signals-utils?
 
@@ -24,15 +24,15 @@ Angular's signals are powerful, but common operations require boilerplate code. 
 ## 📦 Installation
 
 ```bash
-npm install ng-signals-utils
+npm install @sergeydus/ng-signals-utils
 ```
 
 ```bash
-yarn add ng-signals-utils
+yarn add @sergeydus/ng-signals-utils
 ```
 
 ```bash
-pnpm add ng-signals-utils
+pnpm add @sergeydus/ng-signals-utils
 ```
 
 ## 🎯 Quick Examples
@@ -57,7 +57,7 @@ effect(() => {
 
 **With ng-signals-utils:**
 ```typescript
-import { debounceSignal } from 'ng-signals-utils';
+import { debounceSignal } from '@sergeydus/ng-signals-utils';
 
 const searchTerm = signal('');
 const debouncedSearch = debounceSignal(searchTerm, 300);
@@ -77,7 +77,7 @@ const completedTodos = computed(() =>
 
 **With ng-signals-utils:**
 ```typescript
-import { arraySignalFilter } from 'ng-signals-utils';
+import { arraySignalFilter } from '@sergeydus/ng-signals-utils';
 
 const allTodos = signal<Todo[]>([]);
 const completedTodos = arraySignalFilter(allTodos, todo => todo.completed);
@@ -90,7 +90,7 @@ const completedTodos = arraySignalFilter(allTodos, todo => todo.completed);
 
 ```typescript
 import { Component, signal } from '@angular/core';
-import { debounceSignal } from 'ng-signals-utils';
+import { debounceSignal } from '@sergeydus/ng-signals-utils';
 
 @Component({
   selector: 'app-search',
@@ -116,7 +116,7 @@ export class SearchComponent {
 ### Managing Todo Lists
 
 ```typescript
-import { arraySignalPush, arraySignalRemoveAt, arraySignalFilter } from 'ng-signals-utils';
+import { arraySignalPush, arraySignalRemoveAt, arraySignalFilter } from '@sergeydus/ng-signals-utils';
 
 export class TodoComponent {
   todos = signal<Todo[]>([]);
@@ -136,7 +136,7 @@ export class TodoComponent {
 ### Form State Management
 
 ```typescript
-import { patchSignal, pickSignal } from 'ng-signals-utils';
+import { patchSignal, pickSignal } from '@sergeydus/ng-signals-utils';
 
 export class UserFormComponent {
   user = signal({
@@ -159,7 +159,7 @@ export class UserFormComponent {
 ### Combining Multiple Signals
 
 ```typescript
-import { combineSignals } from 'ng-signals-utils';
+import { combineSignals } from '@sergeydus/ng-signals-utils';
 
 export class CheckoutComponent {
   items = signal<Item[]>([]);

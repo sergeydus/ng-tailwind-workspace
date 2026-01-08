@@ -19,8 +19,8 @@ Thank you for your interest in contributing! We welcome contributions from the c
 
 2. **Clone your fork**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ng-signals-utils.git
-   cd ng-signals-utils
+   git clone https://github.com/YOUR_USERNAME/ng-tailwind-workspace.git
+   cd ng-tailwind-workspace
    ```
 
 3. **Create a branch**
