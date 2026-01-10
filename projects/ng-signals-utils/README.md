@@ -89,7 +89,8 @@ const completedTodos = arraySignalFilter(allTodos, todo => todo.completed);
 ### Real-time Search with Debouncing
 
 ```typescript
-import { Component, signal } from '@angular/core';
+import { Component, signal, effect, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { debounceSignal } from '@sergeydus/ng-signals-utils';
 
 @Component({
@@ -100,6 +101,8 @@ import { debounceSignal } from '@sergeydus/ng-signals-utils';
   `
 })
 export class SearchComponent {
+  private http = inject(HttpClient);
+  
   searchTerm = signal('');
   debouncedSearch = debounceSignal(this.searchTerm, 300);
   
@@ -108,6 +111,18 @@ export class SearchComponent {
     effect(() => {
       const query = this.debouncedSearch();
       if (query) this.searchAPI(query);
+    });
+  }
+  
+  onSearch(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchTerm.set(value);
+  }
+  
+  searchAPI(query: string) {
+    this.http.get(`/api/search?q=${query}`).subscribe(results => {
+      console.log('Search results:', results);
+      // Handle your search results here
     });
   }
 }
@@ -167,12 +182,10 @@ export class CheckoutComponent {
   shipping = signal(10);
   
   // Automatically recalculates when any signal changes
+  combined = combineSignals([this.items, this.tax, this.shipping]);
+  
   orderSummary = computed(() => {
-    const [itemList, taxRate, shippingCost] = combineSignals([
-      this.items,
-      this.tax,
-      this.shipping
-    ])();
+    const [itemList, taxRate, shippingCost] = this.combined();
     
     const subtotal = itemList.reduce((sum, item) => sum + item.price, 0);
     return {
