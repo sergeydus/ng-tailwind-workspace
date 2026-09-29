@@ -76,6 +76,8 @@ console.log(validText()); // 'hello'
 
 Debounce signal updates by a specified delay.
 
+`debounceSignal` must be called in an Angular injection context (for example, a component field initializer), or passed `{ injector }` as its third argument. It returns the initial source value immediately and delays later updates.
+
 ```typescript
 import { signal } from '@angular/core';
 import { debounceSignal } from '@sergeydus/ng-signals-utils';
@@ -719,6 +721,8 @@ export class UserDetailsComponent {
 
 ## Effect Helpers
 
+These helpers create Angular effects. Call them in a component or service injection context, or pass `{ injector }` in the final options argument. The short standalone snippets below illustrate behavior inside such a context.
+
 ### watchSignal
 
 Create an effect that tracks value changes with previous value.
@@ -805,7 +809,7 @@ export class AppComponent implements OnInit {
 
 ### throttleEffect
 
-Create a throttled effect that runs at most once per time interval.
+Create a throttled effect with an immediate leading call and the latest value delivered at the end of the throttle interval.
 
 ```typescript
 import { signal } from '@angular/core';

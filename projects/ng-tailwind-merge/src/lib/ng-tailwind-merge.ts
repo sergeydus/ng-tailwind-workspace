@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, effect, input } from '@angular/core';
+import { computed, Directive, effect, ElementRef, HostAttributeToken, inject, input, Renderer2 } from '@angular/core';
 import { twMerge } from 'tailwind-merge';
 import clsx, { type ClassValue } from 'clsx';
 
@@ -10,34 +10,66 @@ export function mergeTailwindClasses(...inputs: ClassValue[]): string {
   return cn(...inputs);
 }
 
+function removeSupersededClasses(
+  element: HTMLElement,
+  renderer: Renderer2,
+  inputs: ClassValue[],
+  mergedClasses: string,
+): void {
+  // Remove only classes supplied by this directive's inputs. A class token shared with
+  // an independent [class.foo] binding cannot be distinguished here; see the README.
+  const retained = new Set(mergedClasses.split(/\s+/));
+  for (const className of clsx(inputs).split(/\s+/)) {
+    if (className && !retained.has(className)) {
+      renderer.removeClass(element, className);
+    }
+  }
+}
+
 @Directive({
   selector: '[twMerge]',
-  standalone: true
+  standalone: true,
+  host: { '[class]': 'mergedClasses()' },
 })
 export class NgTailwindMerge {
-  private el = inject(ElementRef<HTMLElement>);
-  class = input<string>('');
-  ngClass = input<Record<string, boolean> | string | string[] | null>(null);
+  private readonly element = inject(ElementRef<HTMLElement>);
+  private readonly renderer = inject(Renderer2);
+  readonly class = input<ClassValue>('');
+  readonly ngClass = input<Record<string, boolean> | string | string[] | null>(null);
+  protected readonly mergedClasses = computed(() => cn(this.class(), this.ngClass()));
 
   constructor() {
     effect(() => {
-      this.el.nativeElement.setAttribute('class', cn(this.class(), this.ngClass()));
+      removeSupersededClasses(
+        this.element.nativeElement,
+        this.renderer,
+        [this.class(), this.ngClass()],
+        this.mergedClasses(),
+      );
     });
   }
 }
 
 @Directive({
   selector: '[merge]',
-  standalone: true
+  standalone: true,
+  host: { '[class]': 'mergedClasses()' },
 })
 export class NgMerge {
-  private el = inject(ElementRef<HTMLElement>);
-  merge = input<ClassValue | ClassValue[]>([]);
+  private readonly element = inject(ElementRef<HTMLElement>);
+  private readonly renderer = inject(Renderer2);
+  private readonly staticClasses = inject(new HostAttributeToken('class'), { optional: true }) ?? '';
+  readonly merge = input<ClassValue | ClassValue[]>([]);
+  protected readonly mergedClasses = computed(() => cn(this.staticClasses, this.merge()));
 
   constructor() {
     effect(() => {
-      const classes = Array.isArray(this.merge()) ? this.merge() as ClassValue[] : [this.merge()];
-      this.el.nativeElement.setAttribute('class', cn(...classes));
+      removeSupersededClasses(
+        this.element.nativeElement,
+        this.renderer,
+        [this.staticClasses, this.merge()],
+        this.mergedClasses(),
+      );
     });
   }
 }

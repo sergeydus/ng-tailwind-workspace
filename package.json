@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "build": "ng build ng-tailwind-merge && ng build ng-signals-utils",
+    "watch:ng-tailwind-merge": "ng build ng-tailwind-merge --watch --configuration development",
+    "watch:ng-signals-utils": "ng build ng-signals-utils --watch --configuration development",
+    "test": "ng test --watch=false",
     "docs:ng-signals-utils": "compodoc -p projects/ng-signals-utils/tsconfig.lib.json -d docs/ng-signals-utils --name 'ng-signals-utils API Documentation' --theme material",
     "docs:serve": "compodoc -p projects/ng-signals-utils/tsconfig.lib.json -d docs/ng-signals-utils --name 'ng-signals-utils API Documentation' --theme material -s"
   },
@@ -40,6 +40,7 @@
     "@angular/build": "^21.0.4",
     "@angular/cli": "^21.0.4",
     "@angular/compiler-cli": "^21.0.0",
+    "@angular/platform-server": "^21.0.0",
     "@compodoc/compodoc": "^1.1.32",
     "jsdom": "^27.1.0",
     "ng-packagr": "^21.0.0",

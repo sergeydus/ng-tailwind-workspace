@@ -1,4 +1,4 @@
-import { Signal, computed, signal, WritableSignal, effect } from '@angular/core';
+import { Signal, computed, signal, effect, linkedSignal, untracked, type Injector } from '@angular/core';
 
 /**
  * Maps a signal value to another type
@@ -14,66 +14,66 @@ export function mapSignal<T, R>(
 }
 
 /**
- * Filters signal updates based on a predicate
+ * Retains the last source value accepted by a predicate, synchronously.
  * @param source - Source signal
  * @param predicate - Filter predicate
  * @param initialValue - Initial value to use if predicate fails
- * @returns Signal that only updates when predicate returns true
+ * @returns Readonly signal that changes only when a new source value passes the predicate
  */
 export function filterSignal<T>(
   source: Signal<T>,
   predicate: (value: T) => boolean,
   initialValue: T
 ): Signal<T> {
-  const filtered = signal(initialValue);
-  
-  effect(() => {
-    const value = source();
-    if (predicate(value)) {
-      (filtered as WritableSignal<T>).set(value);
-    }
+  const filtered = linkedSignal<T, T>({
+    source: () => source(),
+    computation: (value, previous) => {
+      return untracked(() => predicate(value)) ? value : previous ? previous.value : initialValue;
+    },
   });
-  
+
   return filtered.asReadonly();
 }
 
 /**
- * Debounces signal updates
+ * Debounces source updates. The initial value is available immediately.
+ * Requires an injection context unless an injector is passed in options.
+ * Pending updates are canceled when the owning injector is destroyed.
  * @param source - Source signal
  * @param ms - Debounce delay in milliseconds
- * @returns Debounced signal
+ * @param options - Pass an injector when calling outside an injection context
+ * @returns Readonly debounced signal
  */
 export function debounceSignal<T>(
   source: Signal<T>,
-  ms: number
+  ms: number,
+  options?: { injector?: Injector },
 ): Signal<T> {
   const debounced = signal(source());
-  let timeoutId: any;
-  
-  effect(() => {
+
+  effect((onCleanup) => {
     const value = source();
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      (debounced as WritableSignal<T>).set(value);
-    }, ms);
-  });
-  
+    const timeoutId: ReturnType<typeof setTimeout> = setTimeout(() => debounced.set(value), ms);
+    onCleanup(() => clearTimeout(timeoutId));
+  }, options);
+
   return debounced.asReadonly();
 }
 
 /**
- * Combines multiple signals into a single signal
+ * Combines multiple signals into a single signal while inferring tuple types
  * @param signals - Array of signals to combine
  * @returns Combined signal with array of values
  */
-export function combineSignals<T extends readonly Signal<any>[]>(
+export function combineSignals<const T extends readonly Signal<unknown>[]>(
   signals: T
 ): Signal<{ [K in keyof T]: T[K] extends Signal<infer U> ? U : never }> {
-  return computed(() => signals.map(s => s()) as any);
+  type Values = { [K in keyof T]: T[K] extends Signal<infer U> ? U : never };
+  return computed(() => signals.map(s => s()) as unknown as Values);
 }
 
 /**
- * Creates a signal that emits distinct values only
+ * Creates a synchronous computed signal that retains the last distinct value
  * @param source - Source signal
  * @param compareFn - Optional comparison function
  * @returns Signal that only updates on distinct values
@@ -82,16 +82,5 @@ export function distinctSignal<T>(
   source: Signal<T>,
   compareFn: (a: T, b: T) => boolean = (a, b) => a === b
 ): Signal<T> {
-  const distinct = signal(source());
-  let lastValue = source();
-  
-  effect(() => {
-    const value = source();
-    if (!compareFn(value, lastValue)) {
-      lastValue = value;
-      (distinct as WritableSignal<T>).set(value);
-    }
-  });
-  
-  return distinct.asReadonly();
+  return computed(() => source(), { equal: compareFn });
 }

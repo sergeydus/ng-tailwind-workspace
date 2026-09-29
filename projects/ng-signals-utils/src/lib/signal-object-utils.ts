@@ -44,11 +44,11 @@ export function omitSignal<T extends object, K extends keyof T>(
 ): Signal<Omit<T, K>> {
   return computed(() => {
     const obj = objectSignal();
-    const result = { ...obj } as any;
+    const result: Partial<T> = { ...obj };
     for (const key of keys) {
       delete result[key];
     }
-    return result;
+    return result as Omit<T, K>;
   });
 }
 

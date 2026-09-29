@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@sergeydus/ng-signals-utils.svg)](https://www.npmjs.com/package/@sergeydus/ng-signals-utils)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-[![Angular](https://img.shields.io/badge/Angular-17+-red.svg)](https://angular.io/)
+[![Angular](https://img.shields.io/badge/Angular-21-red.svg)](https://angular.dev/)
 
 **Powerful utility functions for Angular signals that make reactive programming easier and more intuitive.**
 
@@ -38,6 +38,8 @@ pnpm add @sergeydus/ng-signals-utils
 ## 🎯 Quick Examples
 
 ### Before vs After
+
+These snippets are intended to run inside an Angular component or service injection context.
 
 **Without ng-signals-utils:**
 ```typescript
@@ -206,7 +208,7 @@ export class CheckoutComponent {
 |----------|-------------|
 | `mapSignal<T, R>(source, fn)` | Transform signal values to another type |
 | `filterSignal<T>(source, predicate, initial)` | Filter signal updates based on a condition |
-| `debounceSignal<T>(source, ms)` | Debounce signal updates |
+| `debounceSignal<T>(source, ms, options?)` | Debounce signal updates |
 | `combineSignals<T>(signals)` | Combine multiple signals into one |
 | `distinctSignal<T>(source, compareFn?)` | Emit only distinct consecutive values |
 
@@ -244,13 +246,21 @@ export class CheckoutComponent {
 | `throttleEffect<T>(source, fn, ms, options?)` | Throttle effect execution |
 | `debounceEffect<T>(source, fn, ms, options?)` | Debounce effect execution |
 
+### Timing and injection context
+
+- `mapSignal`, `filterSignal`, `combineSignals`, and `distinctSignal` are synchronous derivations and work outside an injection context. `filterSignal` retains its last accepted value (or the supplied initial value before any match) and returns a readonly signal. Its predicate is evaluated when the source changes; signals read only inside the predicate do not trigger another evaluation. `distinctSignal` accepts an optional equality comparator.
+- `debounceSignal` exposes the source's initial value immediately and publishes later values after the delay. It requires an injection context, such as a component field initializer, or an explicit `{ injector }` third argument. Equal source values do not restart the timer. A pending update is canceled when its owning injector is destroyed.
+- `watchSignal`, `watchUntil`, `throttleEffect`, and `debounceEffect` create Angular effects. Call them in an injection context or pass `{ injector }` as their final options argument. They track only the explicit source signal, not signals read by a predicate or callback.
+- `watchSignal` skips the initial value and calls back on later changes with the previous value. If the source returns to its previous value before the effect runs, there is no callback. `watchUntil` checks the initial value, runs once when its predicate passes, and then destroys its effect.
+- `throttleEffect` calls back immediately with the initial value, then delivers the latest change at the end of each throttle window. `debounceEffect` schedules the initial value after the delay and resets its timer on source changes. Both cancel pending callbacks when their effect is destroyed.
+
 ## 📖 Full Documentation
 
 For comprehensive examples and advanced usage patterns, see [EXAMPLES.md](./EXAMPLES.md).
 
 ## 🔧 Requirements
 
-- Angular 17.0.0 or higher
+- Angular 21 for the current workspace build. This source uses `linkedSignal` (available since Angular 20); packed-package support for Angular 21 and 22 is still being checked. The package's older peer range must be corrected before release.
 - TypeScript 5.0 or higher
 
 ## 🤝 Contributing
