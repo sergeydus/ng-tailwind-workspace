@@ -1,7 +1,7 @@
 # Angular workspace improvement and update spec
 
 **Research date:** 2026-09-29
-**Scope:** the two present libraries, `ng-tailwind-merge` and `@sergeydus/ng-signals-utils`, plus their shared build, test, documentation, and release setup. Items 1–6 are implemented; documentation and CI work remain, and the Angular 22 development-toolchain migration is a separate later release.
+**Scope:** the two present libraries, `ng-tailwind-merge` and `@sergeydus/ng-signals-utils`, plus their shared build, test, documentation, and release setup. Items 1–6 and 8 are implemented; CI work remains, and the Angular 22 development-toolchain migration is a separate later release.
 
 ## Current state
 
@@ -71,7 +71,7 @@ Timers use `ReturnType<typeof setTimeout>`. The `any` casts in `combineSignals` 
 
 ### 5. Keep the next release on an Angular 21 build — implemented
 
-**Compatibility checks (2026-09-30):** On Node 24.21.0, `npm ci` and `npm test` pass (51 tests). `npm run verify:consumer:21` and `npm run verify:consumer:22` both build and pack the Angular 21-built libraries, check tarball contents and peer ranges, install them in clean apps, and pass strict production builds using both public import paths, including a `combineSignals` tuple assignment. The consumer installs resolved Angular 21.2.24 and 22.2.0 respectively. Both tarballs contain seven files, including LICENSE, README, CHANGELOG, bundles, manifests, and declarations. Both packages declare `@angular/core >=21.0.0 <23.0.0`. The 51 library runtime tests still run against Angular 21; the Angular 22 consumer check verifies installation and compilation. The fixture source and runner are checked in under `tools/consumer-fixture/` for a fresh checkout.
+**Compatibility checks (2026-09-30):** On Node 24.21.0, `npm ci` and `npm test` pass (51 tests). `npm run verify:consumer:21` and `npm run verify:consumer:22` both build and pack the Angular 21-built libraries, check tarball contents and peer ranges, install them in clean apps, and pass strict production builds using both public import paths, including a `combineSignals` tuple assignment. The consumer installs resolved Angular 21.2.24 and 22.2.0 respectively. The directive tarball contains seven files and the signals tarball contains eight, including LICENSE, README, CHANGELOG, bundles, manifests, and declarations; the signals tarball also includes EXAMPLES.md. Both packages declare `@angular/core >=21.0.0 <23.0.0`. The 51 library runtime tests still run against Angular 21; the Angular 22 consumer check verifies installation and compilation. The fixture source and runner are checked in under `tools/consumer-fixture/` for a fresh checkout.
 
 **Release metadata prepared:** the next directive package version is `2.0.0`, because the verified Angular floor rises from the published 1.0.0 claim and class behavior changes. The next signals package version is `0.1.0`, reflecting its Angular floor and signal timing changes during its 0.x development line. Each package has an unreleased changelog entry that must receive a release date only when publishing is approved. Neither version has been published.
 
@@ -104,6 +104,8 @@ An Angular 22-built directive package needs Angular 22 or newer consumers under 
 Update package READMEs and `EXAMPLES.md` to match the selected Angular floor and the tested signal/directive semantics. Fix stale issue/repository placeholders and incorrect `npm start` and bare `npm run build` claims. Keep the directive README's `[ngClass]` example without an `NgClass` import, because it binds to the library directive's own input; explain the distinction if consumers might import Angular's `NgClass` too. Clarify that `@sergeydus/ng-signals-utils` is a library of signal helpers, not an application. Decide whether generated `docs/ng-signals-utils` is a release artifact or should be regenerated from source, and verify its links and API list when published.
 
 **Acceptance:** copyable examples compile in the consumer fixture; install and build instructions match real commands; package metadata points to the correct repository and issue tracker.
+
+**Implemented (2026-09-30):** The package guides use Angular 21 and 22 requirements and the tested helper behavior. The signals README and EXAMPLES use complete TypeScript samples, and the consumer fixture extracts all nine TypeScript blocks across both package READMEs and EXAMPLES.md for strict production compilation. The issue link points to this repository. The root README documents actual build, test, consumer, and API docs commands. The Compodoc script now runs on Windows; its generated `docs/ng-signals-utils/` HTML is rebuilt from source on demand and excluded from version control and npm packages. A generated API check found all 24 signal exports in its functions page.
 
 ### 9. Add a small release gate
 

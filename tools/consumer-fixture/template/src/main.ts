@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import './docs-examples/index';
 import { NgMerge, NgTailwindMerge, cn, mergeTailwindClasses } from 'ng-tailwind-merge';
 import {
   combineSignals,

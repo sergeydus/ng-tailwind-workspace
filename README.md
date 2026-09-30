@@ -86,9 +86,21 @@ npm run verify:consumer:22
 This builds both libraries, checks the tarball contents and Angular core peer ranges,
 installs the tarballs in a generated Angular 21 or 22 app under the ignored
 `tmp/` directory, and runs a strict production build for each version. The
-generated app is removed on success and retained for inspection on failure.
+build compiles every TypeScript example in the two package READMEs and the
+signals package's `EXAMPLES.md` from their Markdown source.
+The generated app is removed on success and retained for inspection on failure.
 The library runtime tests in `npm test` still use the workspace's Angular 21
 toolchain.
+
+### Generate API reference
+
+```bash
+npm run docs:ng-signals-utils
+```
+
+This regenerates `docs/ng-signals-utils/` from the signals library source.
+The generated HTML is ignored by Git and excluded from npm packages; the
+package includes its README and `EXAMPLES.md` instead.
 
 ## Publishing to npm
 

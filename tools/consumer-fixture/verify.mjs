@@ -48,17 +48,17 @@ function packedPackage(name, outputDir) {
   const output = npm(['pack', join(root, 'dist', outputDir), '--json', '--pack-destination', packageDir], root, true);
   const [pack] = JSON.parse(output);
   const paths = new Set(pack.files.map(file => file.path));
-  for (const expected of ['LICENSE', 'README.md', 'CHANGELOG.md', 'package.json']) {
+  const requiredFiles = ['LICENSE', 'README.md', 'CHANGELOG.md', 'package.json'];
+  if (outputDir === 'ng-signals-utils') requiredFiles.push('EXAMPLES.md');
+  for (const expected of requiredFiles) {
     if (!paths.has(expected)) throw new Error(`${name} tarball lacks ${expected}`);
   }
   if (![...paths].some(path => path.endsWith('.d.ts'))) throw new Error(`${name} tarball lacks declarations`);
   if (![...paths].some(path => path.endsWith('.mjs'))) throw new Error(`${name} tarball lacks a module bundle`);
   const manifest = JSON.parse(readFileSync(join(root, 'dist', outputDir, 'package.json'), 'utf8'));
-  const allowedRanges = major === '21'
-    ? ['>=21.0.0 <22.0.0', '>=21.0.0 <23.0.0']
-    : ['>=21.0.0 <23.0.0'];
-  if (!allowedRanges.includes(manifest.peerDependencies['@angular/core'])) {
-    throw new Error(`${name} @angular/core peer range is ${manifest.peerDependencies['@angular/core']}; expected ${allowedRanges.join(' or ')}`);
+  const expectedRange = '>=21.0.0 <23.0.0';
+  if (manifest.peerDependencies['@angular/core'] !== expectedRange) {
+    throw new Error(`${name} @angular/core peer range is ${manifest.peerDependencies['@angular/core']}; expected ${expectedRange}`);
   }
   if ('@angular/common' in manifest.peerDependencies) {
     throw new Error(`${name} does not import @angular/common but still declares it as a peer`);
@@ -67,9 +67,32 @@ function packedPackage(name, outputDir) {
   return `file:../packages/${basename(pack.filename)}`;
 }
 
+function writeDocumentationExamples() {
+  const sources = [
+    ['directive-readme', join(root, 'projects', 'ng-tailwind-merge', 'README.md')],
+    ['signals-readme', join(root, 'projects', 'ng-signals-utils', 'README.md')],
+    ['signals-examples', join(root, 'projects', 'ng-signals-utils', 'EXAMPLES.md')],
+  ];
+  const generatedDir = join(appDir, 'src', 'docs-examples');
+  mkdirSync(generatedDir, { recursive: true });
+  const imports = [];
+  for (const [label, path] of sources) {
+    const snippets = [...readFileSync(path, 'utf8').matchAll(/^```typescript\r?\n([\s\S]*?)^```[ \t]*$/gm)];
+    if (snippets.length === 0) throw new Error(`${path} has no TypeScript examples to verify`);
+    snippets.forEach((snippet, index) => {
+      const name = `${label}-${index + 1}`;
+      writeFileSync(join(generatedDir, `${name}.ts`), snippet[1].trim() + '\n');
+      imports.push(`import './${name}';`);
+    });
+  }
+  writeFileSync(join(generatedDir, 'index.ts'), imports.join('\n') + '\n');
+  console.log(`Compiling ${imports.length} TypeScript examples from package documentation`);
+}
+
 try {
   console.log(`Building and packing libraries for Angular ${major} consumer verification`);
   npm(['run', 'build'], root);
+  writeDocumentationExamples();
   const directive = packedPackage('ng-tailwind-merge', 'ng-tailwind-merge');
   const signals = packedPackage('@sergeydus/ng-signals-utils', 'ng-signals-utils');
   const angularVersion = `^${major}.0.0`;

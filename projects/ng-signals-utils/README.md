@@ -1,284 +1,71 @@
 # @sergeydus/ng-signals-utils
 
 [![npm version](https://img.shields.io/npm/v/@sergeydus/ng-signals-utils.svg)](https://www.npmjs.com/package/@sergeydus/ng-signals-utils)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue.svg)](https://www.typescriptlang.org/)
-[![Angular](https://img.shields.io/badge/Angular-21-red.svg)](https://angular.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+[![Angular](https://img.shields.io/badge/Angular-21%20%7C%2022-red.svg)](https://angular.dev/)
 
-**Powerful utility functions for Angular signals that make reactive programming easier and more intuitive.**
+Signal transformations, array and object helpers, and effect helpers for Angular applications. This package is a library; it has no application to start or serve.
 
-Stop writing repetitive signal manipulation code. `@sergeydus/ng-signals-utils` provides a comprehensive set of utilities for transforming, filtering, and managing signals in your Angular applications.
+## Requirements
 
-## 🚀 Why ng-signals-utils?
+- Angular 21 or 22 (`@angular/core >=21.0.0 <23.0.0`). The package is built with Angular 21, and its packed artifact passes production builds in clean Angular 21 and 22 consumers.
+- Use the TypeScript version required by your Angular major: `>=5.9.0 <6.0.0` for Angular 21 or `>=6.0.0 <6.1.0` for Angular 22. See [Angular's compatibility table](https://angular.dev/reference/versions).
 
-Angular's signals are powerful, but common operations require boilerplate code. This library provides:
-
-- ✅ **Signal Transformations** - Map, filter, debounce, and combine signals effortlessly
-- ✅ **Array Operations** - Work with array signals using familiar array methods
-- ✅ **Object Utilities** - Update and transform object signals with ease
-- ✅ **Effect Helpers** - Advanced effect management with debouncing, throttling, and more
-- ✅ **Type-Safe** - Full TypeScript support with proper type inference
-- ✅ **Tree-Shakeable** - Only bundle what you use
-- ✅ **Zero Dependencies** - Except Angular core, of course
-
-## 📦 Installation
+## Installation
 
 ```bash
 npm install @sergeydus/ng-signals-utils
 ```
 
-```bash
-yarn add @sergeydus/ng-signals-utils
-```
+## Quick example
 
-```bash
-pnpm add @sergeydus/ng-signals-utils
-```
-
-## 🎯 Quick Examples
-
-### Before vs After
-
-These snippets are intended to run inside an Angular component or service injection context.
-
-**Without ng-signals-utils:**
-```typescript
-// Debouncing a search signal
-const searchTerm = signal('');
-const debouncedSearch = signal('');
-let timeoutId: any;
-
-effect(() => {
-  const value = searchTerm();
-  clearTimeout(timeoutId);
-  timeoutId = setTimeout(() => {
-    debouncedSearch.set(value);
-  }, 300);
-});
-```
-
-**With ng-signals-utils:**
-```typescript
-import { debounceSignal } from '@sergeydus/ng-signals-utils';
-
-const searchTerm = signal('');
-const debouncedSearch = debounceSignal(searchTerm, 300);
-// Done! 🎉
-```
-
----
-
-**Without ng-signals-utils:**
-```typescript
-// Filtering an array signal
-const allTodos = signal<Todo[]>([]);
-const completedTodos = computed(() => 
-  allTodos().filter(todo => todo.completed)
-);
-```
-
-**With ng-signals-utils:**
-```typescript
-import { arraySignalFilter } from '@sergeydus/ng-signals-utils';
-
-const allTodos = signal<Todo[]>([]);
-const completedTodos = arraySignalFilter(allTodos, todo => todo.completed);
-// More expressive and reusable! ✨
-```
-
-## 💡 Common Use Cases
-
-### Real-time Search with Debouncing
+This complete standalone component can be copied into an Angular application. `debounceSignal` is created in a component field initializer, which is an injection context.
 
 ```typescript
-import { Component, signal, effect, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { debounceSignal } from '@sergeydus/ng-signals-utils';
+import { Component, signal } from '@angular/core';
+import { combineSignals, debounceSignal, filterSignal } from '@sergeydus/ng-signals-utils';
 
 @Component({
-  selector: 'app-search',
+  selector: 'app-signal-search',
   template: `
-    <input [value]="searchTerm()" (input)="onSearch($event)" />
-    <p>Searching for: {{ debouncedSearch() }}</p>
-  `
+    <input [value]="query()" (input)="onInput($event)" />
+    <p>Delayed query: {{ delayedQuery() }}</p>
+    <p>Last nonnegative count: {{ nonnegativeCount() }}</p>
+    <p>{{ queryAndCount()[0] }}: {{ queryAndCount()[1] }}</p>
+  `,
 })
-export class SearchComponent {
-  private http = inject(HttpClient);
-  
-  searchTerm = signal('');
-  debouncedSearch = debounceSignal(this.searchTerm, 300);
-  
-  // API calls automatically debounced!
-  constructor() {
-    effect(() => {
-      const query = this.debouncedSearch();
-      if (query) this.searchAPI(query);
-    });
-  }
-  
-  onSearch(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchTerm.set(value);
-  }
-  
-  searchAPI(query: string) {
-    this.http.get(`/api/search?q=${query}`).subscribe(results => {
-      console.log('Search results:', results);
-      // Handle your search results here
-    });
+export class SignalSearchComponent {
+  readonly query = signal('');
+  readonly count = signal(0);
+  readonly delayedQuery = debounceSignal(this.query, 300);
+  readonly nonnegativeCount = filterSignal(this.count, value => value >= 0, 0);
+  readonly queryAndCount = combineSignals([this.query, this.count]);
+
+  onInput(event: Event): void {
+    this.query.set((event.target as HTMLInputElement).value);
   }
 }
 ```
 
-### Managing Todo Lists
+## API
 
-```typescript
-import { arraySignalPush, arraySignalRemoveAt, arraySignalFilter } from '@sergeydus/ng-signals-utils';
+| Group | Exports |
+| --- | --- |
+| Transformations | `mapSignal`, `filterSignal`, `debounceSignal`, `combineSignals`, `distinctSignal` |
+| Arrays | `arraySignalPush`, `arraySignalRemoveAt`, `arraySignalFilter`, `arraySignalMap`, `arraySignalSort`, `arraySignalFind`, `arraySignalLength`, `arraySignalIsEmpty` |
+| Objects | `patchSignal`, `pickSignal`, `omitSignal`, `pluckSignal`, `objectSignalKeys`, `objectSignalValues`, `objectSignalEntries` |
+| Effects | `watchSignal`, `watchUntil`, `throttleEffect`, `debounceEffect` |
 
-export class TodoComponent {
-  todos = signal<Todo[]>([]);
-  completedTodos = arraySignalFilter(this.todos, t => t.completed);
-  pendingTodos = arraySignalFilter(this.todos, t => !t.completed);
-  
-  addTodo(text: string) {
-    arraySignalPush(this.todos, { id: Date.now(), text, completed: false });
-  }
-  
-  removeTodo(index: number) {
-    arraySignalRemoveAt(this.todos, index);
-  }
-}
-```
+See [EXAMPLES.md](./EXAMPLES.md) for complete, compilable examples of every helper. The packed package includes that file. Generate API reference HTML from this workspace with `npm run docs:ng-signals-utils`; generated HTML is kept out of the npm package.
 
-### Form State Management
+## Timing and injection context
 
-```typescript
-import { patchSignal, pickSignal } from '@sergeydus/ng-signals-utils';
+- `mapSignal`, `filterSignal`, `combineSignals`, and `distinctSignal` are synchronous derivations that work outside an injection context. `filterSignal` retains the last accepted value, or the supplied initial value before any match, and returns a readonly signal. The filter predicate does not add dependencies. `combineSignals([a, b])` infers a readonly tuple.
+- `debounceSignal` exposes the source's initial value immediately and publishes later values after the delay. It needs an injection context or an explicit `{ injector }` third argument. A pending update is canceled when its injector is destroyed.
+- `watchSignal`, `watchUntil`, `throttleEffect`, and `debounceEffect` create Angular effects. Create them in a component or service field initializer, or pass `{ injector }` in the final options argument. Callback and predicate reads do not become dependencies.
+- `watchSignal` skips the initial value and batched changes that return to the previous value. `watchUntil` checks the initial value and runs once when its predicate passes.
+- `throttleEffect` calls immediately with the initial value, then delivers the latest change at the end of each window. `debounceEffect` schedules the initial value after the delay and resets its timer on source changes. Both cancel pending callbacks on cleanup.
 
-export class UserFormComponent {
-  user = signal({
-    id: 1,
-    name: '',
-    email: '',
-    password: '',
-    role: 'user'
-  });
-  
-  // Only expose safe fields
-  publicUser = pickSignal(this.user, 'id', 'name', 'email');
-  
-  updateField(field: string, value: any) {
-    patchSignal(this.user, { [field]: value });
-  }
-}
-```
+## Issues and license
 
-### Combining Multiple Signals
-
-```typescript
-import { combineSignals } from '@sergeydus/ng-signals-utils';
-
-export class CheckoutComponent {
-  items = signal<Item[]>([]);
-  tax = signal(0.08);
-  shipping = signal(10);
-  
-  // Automatically recalculates when any signal changes
-  combined = combineSignals([this.items, this.tax, this.shipping]);
-  
-  orderSummary = computed(() => {
-    const [itemList, taxRate, shippingCost] = this.combined();
-    
-    const subtotal = itemList.reduce((sum, item) => sum + item.price, 0);
-    return {
-      subtotal,
-      tax: subtotal * taxRate,
-      shipping: shippingCost,
-      total: subtotal * (1 + taxRate) + shippingCost
-    };
-  });
-}
-```
-
-## 📚 API Reference
-
-### Signal Transformations
-
-| Function | Description |
-|----------|-------------|
-| `mapSignal<T, R>(source, fn)` | Transform signal values to another type |
-| `filterSignal<T>(source, predicate, initial)` | Filter signal updates based on a condition |
-| `debounceSignal<T>(source, ms, options?)` | Debounce signal updates |
-| `combineSignals<T>(signals)` | Combine multiple signals into one |
-| `distinctSignal<T>(source, compareFn?)` | Emit only distinct consecutive values |
-
-### Array Utilities
-
-| Function | Description |
-|----------|-------------|
-| `arraySignalPush<T>(signal, item)` | Add item to array signal |
-| `arraySignalRemoveAt<T>(signal, index)` | Remove item at index |
-| `arraySignalFilter<T>(signal, predicate)` | Create filtered computed signal |
-| `arraySignalMap<T, R>(signal, fn)` | Create mapped computed signal |
-| `arraySignalSort<T>(signal, compareFn?)` | Create sorted computed signal |
-| `arraySignalFind<T>(signal, predicate)` | Find item in array signal |
-| `arraySignalLength<T>(signal)` | Get array length as signal |
-| `arraySignalIsEmpty<T>(signal)` | Check if array is empty |
-
-### Object Utilities
-
-| Function | Description |
-|----------|-------------|
-| `patchSignal<T>(signal, partial)` | Update object signal with partial values |
-| `pickSignal<T, K>(signal, ...keys)` | Pick specific keys from object |
-| `omitSignal<T, K>(signal, ...keys)` | Omit specific keys from object |
-| `pluckSignal<T, K>(signal, key)` | Extract single property as signal |
-| `objectSignalKeys<T>(signal)` | Get object keys as signal |
-| `objectSignalValues<T>(signal)` | Get object values as signal |
-| `objectSignalEntries<T>(signal)` | Get object entries as signal |
-
-### Effect Helpers
-
-| Function | Description |
-|----------|-------------|
-| `watchSignal<T>(source, fn, options?)` | Watch signal with access to previous value |
-| `watchUntil<T>(source, predicate, fn, options?)` | Run effect once when condition is met |
-| `throttleEffect<T>(source, fn, ms, options?)` | Throttle effect execution |
-| `debounceEffect<T>(source, fn, ms, options?)` | Debounce effect execution |
-
-### Timing and injection context
-
-- `mapSignal`, `filterSignal`, `combineSignals`, and `distinctSignal` are synchronous derivations and work outside an injection context. `filterSignal` retains its last accepted value (or the supplied initial value before any match) and returns a readonly signal. Its predicate is evaluated when the source changes; signals read only inside the predicate do not trigger another evaluation. `distinctSignal` accepts an optional equality comparator.
-- `debounceSignal` exposes the source's initial value immediately and publishes later values after the delay. It requires an injection context, such as a component field initializer, or an explicit `{ injector }` third argument. Equal source values do not restart the timer. A pending update is canceled when its owning injector is destroyed.
-- `watchSignal`, `watchUntil`, `throttleEffect`, and `debounceEffect` create Angular effects. Call them in an injection context or pass `{ injector }` as their final options argument. They track only the explicit source signal, not signals read by a predicate or callback.
-- `watchSignal` skips the initial value and calls back on later changes with the previous value. If the source returns to its previous value before the effect runs, there is no callback. `watchUntil` checks the initial value, runs once when its predicate passes, and then destroys its effect.
-- `throttleEffect` calls back immediately with the initial value, then delivers the latest change at the end of each throttle window. `debounceEffect` schedules the initial value after the delay and resets its timer on source changes. Both cancel pending callbacks when their effect is destroyed.
-
-## 📖 Full Documentation
-
-For comprehensive examples and advanced usage patterns, see [EXAMPLES.md](./EXAMPLES.md).
-
-## 🔧 Requirements
-
-- Angular 21 or 22 (`@angular/core >=21.0.0 <23.0.0`). The package is built with Angular 21 and its packed artifact passes production builds in clean Angular 21 and 22 consumers. This source uses `linkedSignal`.
-- Use the TypeScript version required by your Angular major: `>=5.9.0 <6.0.0` for Angular 21 or `>=6.0.0 <6.1.0` for Angular 22. See [Angular's version compatibility table](https://angular.dev/reference/versions).
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-MIT © Sergey Dus
-
-## 🌟 Show Your Support
-
-If you find this library helpful, please give it a star on GitHub!
-
-## 📮 Feedback & Issues
-
-Found a bug or have a feature request? [Open an issue](https://github.com/yourusername/ng-signals-utils/issues)
-
----
-
-Made with ❤️ for the Angular community
+[Open an issue](https://github.com/sergeydus/ng-tailwind-workspace/issues). Licensed under [MIT](./LICENSE).
