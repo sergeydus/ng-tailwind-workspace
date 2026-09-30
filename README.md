@@ -115,3 +115,4 @@ npm pack --dry-run
 For the signals library, use `npm run ng -- build ng-signals-utils` and inspect `dist/ng-signals-utils` instead. Review each package's changelog and version before publishing from the relevant `dist/<library>` directory.
 
 Each library is configured with `ng-packagr` for automated bundling and distribution.
+Use the [manual release checklist](./RELEASE_CHECKLIST.md) before publishing.

@@ -27,7 +27,17 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/ng-tailwind-merge/tsconfig.spec.json"
+            "tsConfig": "projects/ng-tailwind-merge/tsconfig.spec.json",
+            "coverage": true,
+            "coverageInclude": ["projects/ng-tailwind-merge/src/**/*.ts"],
+            "coverageExclude": ["**/*.spec.ts", "**/*.d.ts"],
+            "coverageReporters": ["text", "json-summary"],
+            "coverageThresholds": {
+              "perFile": true,
+              "functions": 100,
+              "lines": 100,
+              "branches": 75
+            }
           }
         }
       }
@@ -53,7 +63,17 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/ng-signals-utils/tsconfig.spec.json"
+            "tsConfig": "projects/ng-signals-utils/tsconfig.spec.json",
+            "coverage": true,
+            "coverageInclude": ["projects/ng-signals-utils/src/**/*.ts"],
+            "coverageExclude": ["**/*.spec.ts", "**/*.d.ts"],
+            "coverageReporters": ["text", "json-summary"],
+            "coverageThresholds": {
+              "perFile": true,
+              "functions": 100,
+              "lines": 100,
+              "branches": 75
+            }
           }
         }
       }

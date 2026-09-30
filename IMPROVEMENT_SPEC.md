@@ -1,7 +1,7 @@
 # Angular workspace improvement and update spec
 
 **Research date:** 2026-09-29
-**Scope:** the two present libraries, `ng-tailwind-merge` and `@sergeydus/ng-signals-utils`, plus their shared build, test, documentation, and release setup. Items 1–6 and 8 are implemented; CI work remains, and the Angular 22 development-toolchain migration is a separate later release.
+**Scope:** the two present libraries, `ng-tailwind-merge` and `@sergeydus/ng-signals-utils`, plus their shared build, test, documentation, and release setup. Items 1–6, 8, and 9 are implemented; the Angular 22 development-toolchain migration is a separate later release.
 
 ## Current state
 
@@ -114,6 +114,8 @@ Add CI for Node versions supported by the selected Angular build and consumer ma
 Fail the release if any library lacks a passing test target or misses the coverage gate. npm 11.19 locally skipped some package install scripts, including `esbuild` and `lmdb`, while builds and tests still passed; confirm that a clean CI install builds successfully, and approve scripts only if CI proves they are needed. Keep publishing manual until the gate is stable; use a release checklist that records package versions, peer ranges, changelog entries, tarball inspection, and consumer smoke tests.
 
 **Acceptance:** a fresh checkout reproduces the release gate without local `dist` or `node_modules`; coverage includes every library source file and meets per-file function thresholds; the published package version and compatibility claim match the tested tarball.
+
+**Implemented locally (2026-09-30):** `.github/workflows/release-gate.yml` runs a clean install, both builds, both test suites with V8 coverage, and both packed consumer checks on Linux and Windows using Node 24.21.0. `angular.json` includes every library source file in coverage and enforces per-file floors of 100% functions and lines and 75% branches. After a clean local `npm ci`, all 51 tests and both consumer builds passed; npm 11 skipped several install scripts without breaking any check. A temporary untested function placed under the source glob caused the test command to fail its coverage gate, proving new source files are counted. The temporary file was removed. The consumer extractor accepts both `typescript` and `ts` fences. `RELEASE_CHECKLIST.md` records the manual release gates. Hosted CI still needs a passing run before publication.
 
 ## Suggested implementation sequence
 

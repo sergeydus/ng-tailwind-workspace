@@ -77,7 +77,7 @@ function writeDocumentationExamples() {
   mkdirSync(generatedDir, { recursive: true });
   const imports = [];
   for (const [label, path] of sources) {
-    const snippets = [...readFileSync(path, 'utf8').matchAll(/^```typescript\r?\n([\s\S]*?)^```[ \t]*$/gm)];
+    const snippets = [...readFileSync(path, 'utf8').matchAll(/^```(?:typescript|ts)\r?\n([\s\S]*?)^```[ \t]*$/gm)];
     if (snippets.length === 0) throw new Error(`${path} has no TypeScript examples to verify`);
     snippets.forEach((snippet, index) => {
       const name = `${label}-${index + 1}`;
