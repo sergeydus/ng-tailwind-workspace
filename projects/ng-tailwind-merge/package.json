@@ -1,6 +1,6 @@
 {
   "name": "ng-tailwind-merge",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "An Angular standalone directive that merges Tailwind CSS classes using tailwind-merge and clsx",
   "license": "MIT",
   "author": "Eric Freeman",
@@ -20,17 +20,12 @@
     "class-merge"
   ],
   "peerDependencies": {
-    "@angular/common": ">=21.0.0 <22.0.0",
     "@angular/core": ">=21.0.0 <22.0.0",
     "tailwind-merge": "^3.4.0",
     "clsx": "^2.1.1"
   },
   "dependencies": {
     "tslib": "^2.3.0"
-  },
-  "engines": {
-    "node": "^20.19.0 || ^22.12.0 || ^24.0.0",
-    "npm": ">=9.0.0"
   },
   "sideEffects": false
 }

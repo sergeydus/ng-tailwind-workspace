@@ -30,7 +30,7 @@ Thank you for your interest in contributing! We welcome contributions from the c
 
 4. **Install dependencies**
    ```bash
-   npm install
+   npm ci
    ```
 
 5. **Make your changes**
@@ -42,7 +42,7 @@ Thank you for your interest in contributing! We welcome contributions from the c
 6. **Test your changes**
    ```bash
    npm test
-   ng build ng-signals-utils
+   npm run ng -- build ng-signals-utils
    ```
 
 7. **Update documentation**

@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ng-signals-utils",
-  "assets": ["LICENSE"],
+  "assets": ["LICENSE", "CHANGELOG.md"],
   "lib": {
     "entryFile": "src/public-api.ts"
   }

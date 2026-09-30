@@ -48,21 +48,22 @@ function packedPackage(name, outputDir) {
   const output = npm(['pack', join(root, 'dist', outputDir), '--json', '--pack-destination', packageDir], root, true);
   const [pack] = JSON.parse(output);
   const paths = new Set(pack.files.map(file => file.path));
-  for (const expected of ['LICENSE', 'README.md', 'package.json']) {
+  for (const expected of ['LICENSE', 'README.md', 'CHANGELOG.md', 'package.json']) {
     if (!paths.has(expected)) throw new Error(`${name} tarball lacks ${expected}`);
   }
   if (![...paths].some(path => path.endsWith('.d.ts'))) throw new Error(`${name} tarball lacks declarations`);
   if (![...paths].some(path => path.endsWith('.mjs'))) throw new Error(`${name} tarball lacks a module bundle`);
   const manifest = JSON.parse(readFileSync(join(root, 'dist', outputDir, 'package.json'), 'utf8'));
-  for (const angularPackage of ['@angular/core', '@angular/common']) {
-    const allowedRanges = major === '21'
-      ? ['>=21.0.0 <22.0.0', '>=21.0.0 <23.0.0']
-      : ['>=21.0.0 <23.0.0'];
-    if (!allowedRanges.includes(manifest.peerDependencies[angularPackage])) {
-      throw new Error(`${name} ${angularPackage} peer range is ${manifest.peerDependencies[angularPackage]}; expected ${allowedRanges.join(' or ')}`);
-    }
+  const allowedRanges = major === '21'
+    ? ['>=21.0.0 <22.0.0', '>=21.0.0 <23.0.0']
+    : ['>=21.0.0 <23.0.0'];
+  if (!allowedRanges.includes(manifest.peerDependencies['@angular/core'])) {
+    throw new Error(`${name} @angular/core peer range is ${manifest.peerDependencies['@angular/core']}; expected ${allowedRanges.join(' or ')}`);
   }
-  console.log(`${name}: ${pack.files.length} packed files, including LICENSE, README, declarations, and bundle`);
+  if ('@angular/common' in manifest.peerDependencies) {
+    throw new Error(`${name} does not import @angular/common but still declares it as a peer`);
+  }
+  console.log(`${name}: ${pack.files.length} packed files, including LICENSE, README, CHANGELOG, declarations, and bundle`);
   return `file:../packages/${basename(pack.filename)}`;
 }
 

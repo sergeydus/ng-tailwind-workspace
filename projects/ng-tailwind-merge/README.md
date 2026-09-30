@@ -143,6 +143,7 @@ const merged = mergeTailwindClasses('p-4 p-8', 'm-2'); // Returns: 'p-8 m-2'
 - **Selector:** `[merge]`
 - **Input:** `merge` - accepts `ClassValue | ClassValue[]` (string, string[], object, or mixed array)
 - **Behavior:** Merges literal static classes first, then `merge`, so the input wins a Tailwind conflict while unrelated static classes remain.
+- **Selector compatibility:** `[merge]` remains available in 2.0.0. It can collide with another imported directive using the same selector; import `NgMerge` only where you intend to use it.
 
 ### Directive Features
 Both directives:

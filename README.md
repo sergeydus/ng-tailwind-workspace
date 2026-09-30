@@ -82,7 +82,7 @@ npm run watch:ng-signals-utils
 npm run verify:consumer:21
 ```
 
-This builds both libraries, checks the tarball contents and Angular peer ranges,
+This builds both libraries, checks the tarball contents and Angular core peer ranges,
 installs the tarballs in a generated Angular 21 app under the ignored `tmp/`
 directory, and runs a strict production build. The generated app is removed on
 success and retained for inspection on failure. Once Node supports Angular 22
@@ -99,6 +99,6 @@ cd dist/ng-tailwind-merge
 npm pack --dry-run
 ```
 
-For the signals library, use `npm run ng -- build ng-signals-utils` and inspect `dist/ng-signals-utils` instead. After verification, publish from the relevant `dist/<library>` directory.
+For the signals library, use `npm run ng -- build ng-signals-utils` and inspect `dist/ng-signals-utils` instead. Review each package's changelog and version before publishing from the relevant `dist/<library>` directory.
 
 Each library is configured with `ng-packagr` for automated bundling and distribution.
