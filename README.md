@@ -32,7 +32,7 @@ See [@sergeydus/ng-signals-utils README](./projects/ng-signals-utils/README.md) 
 ## Setup
 
 ### Prerequisites
-- Node.js `^20.19.0 || ^22.12.0 || ^24.0.0` (the Angular 21 supported ranges)
+- Node.js `^22.22.3 || ^24.15.0` to run the workspace's Angular 21 toolchain and both Angular 21 and 22 consumer checks. See [Angular's compatibility table](https://angular.dev/reference/versions).
 - npm 11 (the workspace declares `npm@11.2.0`)
 
 ### Installation
@@ -80,14 +80,15 @@ npm run watch:ng-signals-utils
 
 ```bash
 npm run verify:consumer:21
+npm run verify:consumer:22
 ```
 
 This builds both libraries, checks the tarball contents and Angular core peer ranges,
-installs the tarballs in a generated Angular 21 app under the ignored `tmp/`
-directory, and runs a strict production build. The generated app is removed on
-success and retained for inspection on failure. Once Node supports Angular 22
-and the package peer ranges include it, run `npm run verify:consumer:22` with
-the same fixture.
+installs the tarballs in a generated Angular 21 or 22 app under the ignored
+`tmp/` directory, and runs a strict production build for each version. The
+generated app is removed on success and retained for inspection on failure.
+The library runtime tests in `npm test` still use the workspace's Angular 21
+toolchain.
 
 ## Publishing to npm
 

@@ -4,7 +4,7 @@
 
 ### Breaking changes
 
-- Require Angular 21 for the verified package build. The published 0.0.8 manifest allowed Angular 17 and later, but the current helpers use `linkedSignal` and the package is verified against an Angular 21 consumer.
+- Require Angular 21 or 22. The published 0.0.8 manifest allowed Angular 17 and later, but the current helpers use `linkedSignal` and the packed package has been verified in production builds with both Angular 21 and 22 consumers.
 - `combineSignals([a, b])` now infers a readonly tuple without `as const`. Code that assigns its value to a mutable array type or calls mutating methods such as `.push()` must use a readonly type or make a copy.
 
 ### Improvements and fixes
@@ -18,4 +18,4 @@
 
 ### Migration
 
-Upgrade consuming applications to Angular 21 before installing 0.1.0. Review code that depended on the old timing of filtered, distinct, debounced, or throttled values; see the README's timing section. For a mutable array from `combineSignals`, copy the result with `[...combined()]`.
+Upgrade consuming applications to Angular 21 or 22 before installing 0.1.0. Review code that depended on the old timing of filtered, distinct, debounced, or throttled values; see the README's timing section. For a mutable array from `combineSignals`, copy the result with `[...combined()]`.

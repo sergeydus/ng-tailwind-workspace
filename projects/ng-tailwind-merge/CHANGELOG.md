@@ -4,7 +4,7 @@
 
 ### Breaking changes
 
-- Require Angular 21. The published 1.0.0 manifest allowed Angular 17 and later; this Angular 21-built directive has been verified in an Angular 21 consumer. Angular 22 support has not yet been verified.
+- Require Angular 21 or 22. The published 1.0.0 manifest allowed Angular 17 and later; this Angular 21-built directive has been verified in packed-package production builds with both Angular 21 and 22 consumers.
 - Class conflict handling now follows the directive inputs' documented order. `NgTailwindMerge` merges `class` before `ngClass`; `NgMerge` merges literal static classes before `merge`. Templates that relied on the previous whole-attribute rewrite may render a different class list.
 
 ### Improvements and fixes
@@ -17,4 +17,4 @@
 
 ### Migration
 
-Upgrade consuming applications to Angular 21 before installing 2.0.0. Review templates that mix `[class]`, `[ngClass]`, `[class.foo]`, and `[merge]` bindings. Angular's `NgClass` import is unnecessary when `NgTailwindMerge` handles `[ngClass]`.
+Upgrade consuming applications to Angular 21 or 22 before installing 2.0.0. Review templates that mix `[class]`, `[ngClass]`, `[class.foo]`, and `[merge]` bindings. Angular's `NgClass` import is unnecessary when `NgTailwindMerge` handles `[ngClass]`.

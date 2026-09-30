@@ -4,7 +4,7 @@ An Angular standalone directive that **merges Tailwind CSS classes** from `class
 
 ## Requirements
 
-- Angular 21. The packed package is built and checked against an Angular 21 consumer.
+- Angular 21 or 22 (`@angular/core >=21.0.0 <23.0.0`). The package is built with Angular 21 and its packed artifact passes production builds in clean Angular 21 and 22 consumers.
 - `tailwind-merge` **^3.4.0**
 - `clsx` **^2.1.1**
 
