@@ -260,8 +260,8 @@ For comprehensive examples and advanced usage patterns, see [EXAMPLES.md](./EXAM
 
 ## 🔧 Requirements
 
-- Angular 21 for the current workspace build. This source uses `linkedSignal` (available since Angular 20); packed-package support for Angular 21 and 22 is still being checked. The package's older peer range must be corrected before release.
-- TypeScript 5.0 or higher
+- Angular 21. The packed package is built and checked against an Angular 21 consumer. This source uses `linkedSignal`.
+- TypeScript 5.9 (the Angular 21 compatible range is `>=5.9.0 <6.0.0`)
 
 ## 🤝 Contributing
 

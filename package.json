@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "build": "ng build ng-tailwind-merge && ng build ng-signals-utils",
+    "verify:consumer:21": "node tools/consumer-fixture/verify.mjs 21",
+    "verify:consumer:22": "node tools/consumer-fixture/verify.mjs 22",
     "watch:ng-tailwind-merge": "ng build ng-tailwind-merge --watch --configuration development",
     "watch:ng-signals-utils": "ng build ng-signals-utils --watch --configuration development",
     "test": "ng test --watch=false",

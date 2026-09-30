@@ -76,6 +76,19 @@ npm run watch:ng-tailwind-merge
 npm run watch:ng-signals-utils
 ```
 
+### Verify packed packages in a clean consumer
+
+```bash
+npm run verify:consumer:21
+```
+
+This builds both libraries, checks the tarball contents and Angular peer ranges,
+installs the tarballs in a generated Angular 21 app under the ignored `tmp/`
+directory, and runs a strict production build. The generated app is removed on
+success and retained for inspection on failure. Once Node supports Angular 22
+and the package peer ranges include it, run `npm run verify:consumer:22` with
+the same fixture.
+
 ## Publishing to npm
 
 Build and inspect the package you intend to release:
