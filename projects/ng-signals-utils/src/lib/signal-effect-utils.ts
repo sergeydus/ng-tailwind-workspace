@@ -1,7 +1,9 @@
-import { Signal, effect, EffectRef, CreateEffectOptions } from '@angular/core';
+import { Signal, effect, EffectRef, CreateEffectOptions, untracked } from '@angular/core';
 
 /**
- * Creates an effect that runs only when the signal value changes
+ * Creates an effect that skips the initial value and runs on later net source changes.
+ * Changes that return to the previous value before the effect runs are ignored.
+ * The callback's signal reads do not become dependencies.
  * @param source - Source signal to watch
  * @param fn - Effect function
  * @param options - Effect options
@@ -17,8 +19,8 @@ export function watchSignal<T>(
   
   return effect(() => {
     const value = source();
-    if (!isFirst) {
-      fn(value, previousValue);
+    if (!isFirst && !Object.is(value, previousValue)) {
+      untracked(() => fn(value, previousValue));
     }
     previousValue = value;
     isFirst = false;
@@ -26,7 +28,8 @@ export function watchSignal<T>(
 }
 
 /**
- * Creates an effect that runs once when the signal meets a condition
+ * Creates an effect that runs once when the source meets a condition, including initially.
+ * Predicate and callback signal reads do not become dependencies.
  * @param source - Source signal to watch
  * @param predicate - Condition to check
  * @param fn - Effect function
@@ -45,8 +48,8 @@ export function watchUntil<T>(
     if (hasRun) return;
     
     const value = source();
-    if (predicate(value)) {
-      fn(value);
+    if (untracked(() => predicate(value))) {
+      untracked(() => fn(value));
       hasRun = true;
       effectRef.destroy();
     }
@@ -56,7 +59,8 @@ export function watchUntil<T>(
 }
 
 /**
- * Creates a throttled effect
+ * Creates a throttled effect with an immediate leading call and the latest
+ * source value delivered at the end of each throttle window.
  * @param source - Source signal to watch
  * @param fn - Effect function
  * @param ms - Throttle delay in milliseconds
@@ -69,21 +73,30 @@ export function throttleEffect<T>(
   ms: number,
   options?: CreateEffectOptions
 ): EffectRef {
-  let lastRun = 0;
-  
-  return effect(() => {
+  let lastRun: number | undefined;
+
+  return effect((onCleanup) => {
     const value = source();
     const now = Date.now();
-    
-    if (now - lastRun >= ms) {
-      fn(value);
+    const elapsed = lastRun === undefined ? ms : now - lastRun;
+
+    if (elapsed >= ms) {
       lastRun = now;
+      untracked(() => fn(value));
+      return;
     }
+
+    const timeoutId: ReturnType<typeof setTimeout> = setTimeout(() => {
+      lastRun = Date.now();
+      untracked(() => fn(value));
+    }, ms - elapsed);
+    onCleanup(() => clearTimeout(timeoutId));
   }, options);
 }
 
 /**
- * Creates a debounced effect
+ * Creates a debounced effect. The initial value is scheduled after the delay.
+ * Pending callbacks are canceled on a source change or effect destruction.
  * @param source - Source signal to watch
  * @param fn - Effect function
  * @param ms - Debounce delay in milliseconds
@@ -96,11 +109,11 @@ export function debounceEffect<T>(
   ms: number,
   options?: CreateEffectOptions
 ): EffectRef {
-  let timeoutId: any;
-  
-  return effect(() => {
+  return effect((onCleanup) => {
     const value = source();
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(value), ms);
+    const timeoutId: ReturnType<typeof setTimeout> = setTimeout(() => {
+      untracked(() => fn(value));
+    }, ms);
+    onCleanup(() => clearTimeout(timeoutId));
   }, options);
 }

@@ -6,32 +6,6 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "my-directive-lib": {
-      "projectType": "library",
-      "root": "projects/my-directive-lib",
-      "sourceRoot": "projects/my-directive-lib/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/my-directive-lib/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/my-directive-lib/tsconfig.lib.json"
-            }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/my-directive-lib/tsconfig.spec.json"
-          }
-        }
-      }
-    },
     "ng-tailwind-merge": {
       "projectType": "library",
       "root": "projects/ng-tailwind-merge",
@@ -53,33 +27,17 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/ng-tailwind-merge/tsconfig.spec.json"
-          }
-        }
-      }
-    },
-    "ng-tailwind-merge1": {
-      "projectType": "library",
-      "root": "projects/ng-tailwind-merge1",
-      "sourceRoot": "projects/ng-tailwind-merge1/src",
-      "prefix": "lib",
-      "architect": {
-        "build": {
-          "builder": "@angular/build:ng-packagr",
-          "configurations": {
-            "production": {
-              "tsConfig": "projects/ng-tailwind-merge1/tsconfig.lib.prod.json"
-            },
-            "development": {
-              "tsConfig": "projects/ng-tailwind-merge1/tsconfig.lib.json"
+            "tsConfig": "projects/ng-tailwind-merge/tsconfig.spec.json",
+            "coverage": true,
+            "coverageInclude": ["projects/ng-tailwind-merge/src/**/*.ts"],
+            "coverageExclude": ["**/*.spec.ts", "**/*.d.ts"],
+            "coverageReporters": ["text", "json-summary"],
+            "coverageThresholds": {
+              "perFile": true,
+              "functions": 100,
+              "lines": 100,
+              "branches": 75
             }
-          },
-          "defaultConfiguration": "production"
-        },
-        "test": {
-          "builder": "@angular/build:unit-test",
-          "options": {
-            "tsConfig": "projects/ng-tailwind-merge1/tsconfig.spec.json"
           }
         }
       }
@@ -105,7 +63,17 @@
         "test": {
           "builder": "@angular/build:unit-test",
           "options": {
-            "tsConfig": "projects/ng-signals-utils/tsconfig.spec.json"
+            "tsConfig": "projects/ng-signals-utils/tsconfig.spec.json",
+            "coverage": true,
+            "coverageInclude": ["projects/ng-signals-utils/src/**/*.ts"],
+            "coverageExclude": ["**/*.spec.ts", "**/*.d.ts"],
+            "coverageReporters": ["text", "json-summary"],
+            "coverageThresholds": {
+              "perFile": true,
+              "functions": 100,
+              "lines": 100,
+              "branches": 75
+            }
           }
         }
       }

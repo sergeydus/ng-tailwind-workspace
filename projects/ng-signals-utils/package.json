@@ -1,6 +1,6 @@
 {
   "name": "@sergeydus/ng-signals-utils",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Utility functions for Angular signals",
   "keywords": [
     "angular",
@@ -20,8 +20,7 @@
   "author": "Sergey Dus",
   "license": "MIT",
   "peerDependencies": {
-    "@angular/common": ">=17.0.0",
-    "@angular/core": ">=17.0.0"
+    "@angular/core": ">=21.0.0 <23.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

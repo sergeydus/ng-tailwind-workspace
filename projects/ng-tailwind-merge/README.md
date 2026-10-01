@@ -4,7 +4,7 @@ An Angular standalone directive that **merges Tailwind CSS classes** from `class
 
 ## Requirements
 
-- Angular `@angular/core` and `@angular/common` **^17.0.0** (standalone + signal inputs)
+- Angular 21 or 22 (`@angular/core >=21.0.0 <23.0.0`). The package is built with Angular 21 and its packed artifact passes production builds in clean Angular 21 and 22 consumers.
 - `tailwind-merge` **^3.4.0**
 - `clsx` **^2.1.1**
 
@@ -136,12 +136,14 @@ const merged = mergeTailwindClasses('p-4 p-8', 'm-2'); // Returns: 'p-8 m-2'
 
 ### `NgTailwindMerge`
 - **Selector:** `[twMerge]`
-- **Behavior:** Reads `class` and `ngClass` attributes and merges them via `tailwind-merge`.
+- **Inputs:** `class` accepts a string, array, or object; `ngClass` accepts a string, string array, or boolean class map.
+- **Behavior:** Merges `class` first, then `ngClass`, so the last conflicting utility from `ngClass` wins. The directive handles `[ngClass]` without an Angular `NgClass` import.
 
 ### `NgMerge`
 - **Selector:** `[merge]`
 - **Input:** `merge` - accepts `ClassValue | ClassValue[]` (string, string[], object, or mixed array)
-- **Behavior:** Merges the input value(s) and applies the result to the element's `class` attribute.
+- **Behavior:** Merges literal static classes first, then `merge`, so the input wins a Tailwind conflict while unrelated static classes remain.
+- **Selector compatibility:** `[merge]` remains available in 2.0.0. It can collide with another imported directive using the same selector; import `NgMerge` only where you intend to use it.
 
 ### Directive Features
 Both directives:
@@ -154,5 +156,8 @@ Both directives:
 
 - Signal-based inputs read the current values reactively.
 - `clsx` normalizes inputs; `tailwind-merge` resolves Tailwind conflicts.
-- The final merged string is applied to the element's `class` attribute via `effect()`.
+- Angular host class binding applies the merged values. A directive effect removes superseded classes from its own inputs during change detection, preserving unrelated Angular `[class.foo]` bindings as those bindings change.
+- A `[class.foo]` binding is not part of the directive's Tailwind merge. If it uses the same class token as a directive input and that token loses a conflict, the cleanup can remove the class even while Angular's binding is true; avoid that overlap.
+- Importing Angular's `NgClass` as well as `NgTailwindMerge` gives both directives the same `[ngClass]` binding; the tested on/off updates are supported, but the import is unnecessary for this directive.
+- A render-to-string test verifies that both directives remove conflicting classes while preserving unrelated static and `[class.foo]` classes in server HTML. Hydration behavior has not yet been tested.
 

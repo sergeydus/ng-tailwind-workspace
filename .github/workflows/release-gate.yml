@@ -1,0 +1,38 @@
+name: Release gate
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.21.0'
+          cache: npm
+      - name: Show tool versions
+        run: |
+          node --version
+          npm --version
+      - name: Clean install
+        run: npm ci
+      - name: Build libraries
+        run: npm run build
+      - name: Test libraries with coverage gates
+        run: npm test
+      - name: Verify Angular 21 packed consumers
+        run: npm run verify:consumer:21
+      - name: Verify Angular 22 packed consumers
+        run: npm run verify:consumer:22
